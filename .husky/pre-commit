@@ -1,5 +1,5 @@
 npm run update-status
-git add README.md
+git add README.md src/data/project-status.json
 npx lint-staged
 npx tsc --noEmit
 
