@@ -1,0 +1,130 @@
+name: Sync Tasks to Issues
+
+on:
+  push:
+    paths:
+      - ".agent/dev_plan/DEVELOPMENT_TASKS.md"
+    branches:
+      - main
+      - master
+      - develop
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  sync_tasks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse Markdown and Sync Issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const taskFilePath = '.agent/dev_plan/DEVELOPMENT_TASKS.md';
+
+            if (!fs.existsSync(taskFilePath)) {
+              console.log(`File not found: ${taskFilePath}`);
+              return;
+            }
+
+            const content = fs.readFileSync(taskFilePath, 'utf8');
+            const lines = content.split('\n');
+
+            // Regex 1: Standard Checkboxes: - [ ] **Title**: Desc
+            const checkboxRegex = /^- \[(.|x|X)\] \*\*(.*?)\*\*:?(.*)/;
+
+            // Regex 2: Recurring Tasks: - 🔄 Title
+            const recurringRegex = /^- 🔄 (.*)/;
+
+            const desiredState = {}; // Map<Title, { state: 'open'|'closed', labels: string[] }>
+
+            lines.forEach(line => {
+              // 1. Check for Standard Tasks
+              const cbMatch = line.match(checkboxRegex);
+              if (cbMatch) {
+                const isChecked = cbMatch[1].toLowerCase() === 'x';
+                const title = cbMatch[2].trim();
+                const body = cbMatch[3].trim();
+                
+                desiredState[`Feat: ${title}`] = {
+                  state: isChecked ? 'closed' : 'open',
+                  body: body || "Task from Feature Matrix",
+                  labels: ['enhancement', 'feature-matrix']
+                };
+                return;
+              }
+
+              // 2. Check for Recurring Tasks (Always Open)
+              const recMatch = line.match(recurringRegex);
+              if (recMatch) {
+                const title = recMatch[1].trim();
+                // We prefix with "Maint:" for maintenance/recurring
+                desiredState[`Maint: ${title}`] = {
+                  state: 'open', // Always open
+                  body: "Recurring maintenance task from Development Plan.",
+                  labels: ['maintenance', 'recurring']
+                };
+              }
+            });
+
+            if (Object.keys(desiredState).length === 0) {
+              console.log("No tasks found to sync.");
+              return;
+            }
+
+            console.log(`Processing ${Object.keys(desiredState).length} tasks...`);
+
+            // Fetch ALL existing issues created by this automation
+            // We fetch ANY issue that has either 'feature-matrix' OR 'recurring' label
+            // Note: Since we can't OR labels easily in one query, we'll fetch all open+closed and filter manually if efficient,
+            // or just rely on title matching for pure updates.
+            // For safety, let's just paginate 'all' issues.
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              per_page: 100
+            });
+
+            const existingMap = new Map(); // Map<Title, IssueObject>
+            existingIssues.forEach(i => existingMap.set(i.title, i));
+
+            // Sync Logic
+            for (const [title, data] of Object.entries(desiredState)) {
+              const existing = existingMap.get(title);
+
+              if (!existing) {
+                // CREATE new issue ONLY if it's supposed to be OPEN
+                // (Don't retroactively create closed issues for old completed tasks unless user specifically wants history)
+                if (data.state === 'open') {
+                  console.log(`Creating NEW issue: ${title}`);
+                  await github.rest.issues.create({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    title: title,
+                    body: `${data.body}\n\n*Source: ${taskFilePath}*`,
+                    labels: data.labels
+                  });
+                   await new Promise(r => setTimeout(r, 1000)); // Rate limit safety
+                }
+              } else {
+                // UPDATE existing issue if state mismatches
+                if (existing.state !== data.state) {
+                  console.log(`Updating ${title} -> ${data.state}`);
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: existing.number,
+                    state: data.state
+                  });
+                   await new Promise(r => setTimeout(r, 1000));
+                }
+              }
+            }

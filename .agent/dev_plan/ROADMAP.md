@@ -19,9 +19,7 @@ This roadmap outlines the future of the **FormixUI** ecosystem and the AI Agent'
 
 ### Phase 1: Core Stability (v3.1.x)
 
-- [x] Rebranding to `formix-ui`.
 - [x] Full TypeScript + Vite integration.
-- [x] Native Date/Time picker replacement.
 - [ ] **Accessibility Audit**: Achieve WCAG 2.1 compliance.
 
 ### Phase 2: Ecosystem Expansion (v3.2.x)
