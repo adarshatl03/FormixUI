@@ -24,4 +24,5 @@ dist-lib
 *.njsproj
 *.sln
 *.sw?
-# .agent
+.agent/
+!.agent/dev_plan/DEVELOPMENT_TASKS.md
