@@ -76,11 +76,42 @@ async function generateStatus() {
   // Let's re-scan with simple logic: [ ] is outstanding (upcoming/in-progress), [x] is done.
   // We'll treat all [ ] as "In Progress / Upcoming" for the Total calculation.
 
-  const totalTasks = completedCount + inProgressCount + upcomingCount; // Recurring doesn't count towards completion % usually
+  const totalTasks = completedCount + inProgressCount + upcomingCount;
   const percent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
-  console.log(chalk.green(`✅ Version: ${version}`));
-  console.log(chalk.green(`📊 Progress: ${percent}% (${completedCount}/${totalTasks})`));
+  console.log("");
+  console.log(chalk.hex("#FF00FF")("╭──────────────────────────────────────────────╮"));
+  console.log(
+    chalk.hex("#FF00FF")("│") +
+      chalk.bold.white.bgHex("#FF00FF")("           🚀 FORMIX UI STATUS              ") +
+      chalk.hex("#FF00FF")("│")
+  );
+  console.log(chalk.hex("#FF00FF")("│                                              │"));
+  console.log(
+    chalk.hex("#FF00FF")("│") +
+      `   📦 Version:    ${chalk.bold.yellow("v" + version)}`.padEnd(55) +
+      chalk.hex("#FF00FF")("│")
+  );
+  console.log(
+    chalk.hex("#FF00FF")("│") +
+      `   📊 Progress:   ${chalk.bold.green(percent + "%")} (${completedCount}/${totalTasks})`.padEnd(
+        55
+      ) +
+      chalk.hex("#FF00FF")("│")
+  );
+  console.log(
+    chalk.hex("#FF00FF")("│") +
+      `   ✅ Completed:  ${chalk.green(completedCount)}`.padEnd(55) +
+      chalk.hex("#FF00FF")("│")
+  );
+  console.log(
+    chalk.hex("#FF00FF")("│") +
+      `   🚧 In Prog:    ${chalk.blue(inProgressCount + upcomingCount)}`.padEnd(55) +
+      chalk.hex("#FF00FF")("│")
+  );
+  console.log(chalk.hex("#FF00FF")("│                                              │"));
+  console.log(chalk.hex("#FF00FF")("╰──────────────────────────────────────────────╯"));
+  console.log("");
 
   // 3. Prepare Data Object
   const statusData = {
@@ -93,7 +124,7 @@ async function generateStatus() {
       total: totalTasks,
     },
     features: {
-      completed: completedFeatures, // Just a sample
+      completed: completedFeatures,
       inProgress: inProgressFeatures,
     },
     lastUpdated: new Date().toISOString(),
@@ -102,7 +133,7 @@ async function generateStatus() {
   // 4. Write JSON for Frontend
   await fs.ensureDir(path.dirname(STATUS_DATA_FILE));
   await fs.writeJson(STATUS_DATA_FILE, statusData, { spaces: 2 });
-  console.log(chalk.cyan(`💾 Saved status data to ${STATUS_DATA_FILE}`));
+  // console.log(chalk.cyan(`💾 Saved status data to ${STATUS_DATA_FILE}`));
 
   // 5. Generate README Content
   const readmeContent = await fs.readFile(README_FILE, "utf-8");

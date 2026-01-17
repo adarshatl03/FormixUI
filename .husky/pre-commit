@@ -1,5 +1,8 @@
+echo -e "\033[1;36m🔄 Running pre-commit hooks...\033[0m"
 npm run update-status
 git add README.md src/data/project-status.json
+echo -e "\033[1;32m✅ Status Updated\033[0m"
 npx lint-staged
 npx tsc --noEmit
+echo -e "\033[1;32m✨ Commit checks passed!\033[0m"
 
