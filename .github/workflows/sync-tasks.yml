@@ -17,6 +17,13 @@ permissions:
 jobs:
   sync_tasks:
     runs-on: ubuntu-latest
+
+    # ---------------------------------------------------------
+    # CONFIGURATION
+    # ---------------------------------------------------------
+    env:
+      PROJECT_NUMBER: 1 # <--- UPDATE THIS TO YOUR PROJECT NUMBER
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,11 +31,18 @@ jobs:
       - name: Parse Markdown and Sync Issues
         uses: actions/github-script@v7
         with:
+          # REQUIRED: Secret 'PROJECT_TOKEN' must be a PAT with 'project' scope
+          github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
             const fs = require('fs');
             const path = require('path');
 
             const taskFilePath = '.agent/dev_plan/DEVELOPMENT_TASKS.md';
+
+            // Configuration
+            const projectNumber = parseInt(process.env.PROJECT_NUMBER);
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
 
             if (!fs.existsSync(taskFilePath)) {
               console.log(`File not found: ${taskFilePath}`);
@@ -44,7 +58,7 @@ jobs:
             // Regex 2: Recurring Tasks: - 🔄 Title
             const recurringRegex = /^- 🔄 (.*)/;
 
-            const desiredState = {}; // Map<Title, { state: 'open'|'closed', labels: string[] }>
+            const desiredState = {}; // Map<Title, { state: 'open'|'closed', labels: string[], body: string }>
 
             lines.forEach(line => {
               // 1. Check for Standard Tasks
@@ -82,48 +96,82 @@ jobs:
 
             console.log(`Processing ${Object.keys(desiredState).length} tasks...`);
 
-            // Fetch ALL existing issues created by this automation
-            // We fetch ANY issue that has either 'feature-matrix' OR 'recurring' label
-            // Note: Since we can't OR labels easily in one query, we'll fetch all open+closed and filter manually if efficient,
-            // or just rely on title matching for pure updates.
-            // For safety, let's just paginate 'all' issues.
-            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'all',
-              per_page: 100
-            });
+            // ---------------------------------------------------------
+            // 1. Get Project ID (GraphQL)
+            // ---------------------------------------------------------
+            let projectId = null;
+            try {
+              // Assuming USER project. If Org, change `user(login: $owner)` to `organization(login: $owner)`
+              const query = `
+                query($owner: String!, $number: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $number) {
+                      id
+                    }
+                  }
+                }
+              `;
+              const data = await github.graphql(query, { owner, number: projectNumber });
+              projectId = data.user?.projectV2?.id;
+              
+              if (projectId) {
+                console.log(`Found Project ID: ${projectId}`);
+              } else {
+                console.log("Project not found (Check Owner/Number). Skipping Project Sync.");
+              }
+            } catch (e) {
+              console.log("Could not find Project via GraphQL. Check PROJECT_TOKEN permissions. Skipping Project Sync.");
+              console.log(e.message);
+            }
 
-            const existingMap = new Map(); // Map<Title, IssueObject>
+            // ---------------------------------------------------------
+            // 2. Fetch Existing Issues
+            // ---------------------------------------------------------
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'all', per_page: 100
+            });
+            const existingMap = new Map();
             existingIssues.forEach(i => existingMap.set(i.title, i));
 
-            // Sync Logic
+            // ---------------------------------------------------------
+            // 3. Sync Logic
+            // ---------------------------------------------------------
             for (const [title, data] of Object.entries(desiredState)) {
               const existing = existingMap.get(title);
 
               if (!existing) {
-                // CREATE new issue ONLY if it's supposed to be OPEN
-                // (Don't retroactively create closed issues for old completed tasks unless user specifically wants history)
+                // CREATE NEW ISSUE
                 if (data.state === 'open') {
                   console.log(`Creating NEW issue: ${title}`);
-                  await github.rest.issues.create({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    title: title,
+                  const newIssue = await github.rest.issues.create({
+                    owner, repo, title,
                     body: `${data.body}\n\n*Source: ${taskFilePath}*`,
                     labels: data.labels
                   });
-                   await new Promise(r => setTimeout(r, 1000)); // Rate limit safety
+                  
+                  // ADD TO PROJECT
+                  if (projectId && newIssue.data.node_id) {
+                    try {
+                      await github.graphql(`
+                        mutation($projectId: ID!, $contentId: ID!) {
+                          addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                            item { id }
+                          }
+                        }
+                      `, { projectId, contentId: newIssue.data.node_id });
+                      console.log(`Added ${title} to Project`);
+                    } catch (e) {
+                      console.log(`Failed to add to project: ${e.message}`);
+                    }
+                  }
+                   await new Promise(r => setTimeout(r, 1000)); 
                 }
               } else {
-                // UPDATE existing issue if state mismatches
+                // UPDATE EXISTING ISSUE
                 if (existing.state !== data.state) {
                   console.log(`Updating ${title} -> ${data.state}`);
                   await github.rest.issues.update({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: existing.number,
-                    state: data.state
+                    owner, repo, issue_number: existing.number, state: data.state
                   });
                    await new Promise(r => setTimeout(r, 1000));
                 }
