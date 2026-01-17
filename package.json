@@ -65,12 +65,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adarshatl03/formix-ui.git"
+    "url": "https://github.com/adarshatl03/FormixUI.git"
   },
   "bugs": {
-    "url": "https://github.com/adarshatl03/formix-ui/issues"
+    "url": "https://github.com/adarshatl03/FormixUI/issues"
   },
-  "homepage": "https://adarshatl03.github.io/formix-ui/",
+  "homepage": "https://adarshatl03.github.io/FormixUI/",
   "peerDependencies": {
     "formik": ">=2.4.0",
     "lucide-react": ">=0.1.0",
