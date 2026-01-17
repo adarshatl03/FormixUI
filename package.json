@@ -34,7 +34,10 @@
     "build:lib": "vite build --config vite.lib.config.ts && tsc -p tsconfig.lib.json && npm run build:cli",
     "build:cli": "tsc -p tsconfig.cli.json",
     "deploy": "gh-pages -d dist-site",
-    "update-status": "node .agent/scripts/generate-status.js"
+    "update-status": "node .agent/scripts/generate-status.js",
+    "release:patch": "node .agent/scripts/release.js patch",
+    "release:minor": "node .agent/scripts/release.js minor",
+    "release:major": "node .agent/scripts/release.js major"
   },
   "bin": {
     "formix-ui": "dist/bin/index.js",

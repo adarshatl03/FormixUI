@@ -26,3 +26,4 @@ dist-lib
 *.sw?
 .agent/
 !.agent/dev_plan/DEVELOPMENT_TASKS.md
+!.agent/scripts/release.js
