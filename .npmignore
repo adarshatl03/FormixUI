@@ -1,0 +1,48 @@
+# Source files
+src/
+public/
+
+# Development files
+.vscode/
+.agent/
+.gemini/
+*.log
+*.lock
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__/
+coverage/
+
+# Build tools
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+eslint.config.js
+
+# Documentation (keep README, LICENSE, CHANGELOG)
+docs/
+examples/
+.github/
+
+# Environment
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Misc
+.gitignore
+.prettierrc
+.editorconfig

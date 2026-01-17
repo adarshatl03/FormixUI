@@ -1,0 +1,209 @@
+import React, { useState, useRef, useEffect } from "react";
+import { useComponentTheme } from "../../theme/ThemeContext";
+import type { BaseFieldProps } from "../field/types";
+import { Calendar } from "./Calendar";
+import { formatDate, parseDate } from "../../../utils/date-utils";
+
+interface DatePickerProps extends BaseFieldProps {
+  value?: Date | null;
+  onChange?: (date: Date | null) => void;
+  min?: Date;
+  max?: Date;
+  format?: string;
+  placeholder?: string;
+}
+
+export const DatePicker: React.FC<DatePickerProps> = ({
+  id,
+  label,
+  error,
+  required,
+  disabled,
+  className,
+  startAdornment,
+  endAdornment,
+  fullWidth,
+  value,
+  onChange,
+  onClear,
+  min,
+  max,
+  format = "dd/MM/yyyy",
+  placeholder,
+  globalOverRide = true,
+  variant,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sync state from props during render pattern
+  const [lastValue, setLastValue] = useState(value);
+  const [lastFormat, setLastFormat] = useState(format);
+
+  if (value !== lastValue || format !== lastFormat) {
+    setLastValue(value);
+    setLastFormat(format);
+    setInputValue(value ? formatDate(value, format) : "");
+  }
+
+  // Close when clicking outside the container
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Resolve Theme
+  const themeClasses = useComponentTheme(
+    "datePicker",
+    {
+      error: !!error,
+      disabled,
+      focused: isFocused || isOpen,
+      value: value,
+      variant,
+    },
+    undefined,
+    globalOverRide
+  );
+
+  const isFloating = variant === "floating";
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setInputValue(val);
+
+    // Attempt parse
+    if (!val) {
+      if (value) onChange?.(null);
+      return;
+    }
+
+    const parsed = parseDate(val);
+    if (parsed) {
+      if (min && parsed < new Date(min.setHours(0, 0, 0, 0))) return;
+      if (max && parsed > new Date(max.setHours(0, 0, 0, 0))) return;
+      // Only update if valid date
+      onChange?.(parsed);
+    }
+  };
+
+  const CalendarIcon = (
+    <button
+      type="button"
+      onClick={(e) => {
+        if (!disabled) {
+          e.preventDefault();
+          setIsOpen((prev) => !prev);
+        }
+      }}
+      disabled={disabled}
+      className={`focus:outline-none transition-colors ${
+        disabled
+          ? "text-muted-foreground cursor-not-allowed opacity-50"
+          : "hover:text-primary cursor-pointer text-muted-foreground"
+      }`}
+      tabIndex={-1}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+        <line x1="16" x2="16" y1="2" y2="6" />
+        <line x1="8" x2="8" y1="2" y2="6" />
+        <line x1="3" x2="21" y1="10" y2="10" />
+      </svg>
+    </button>
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      className={`${themeClasses.root} ${className || ""} ${fullWidth ? "w-full" : ""}`}
+    >
+      {!isFloating && label && (
+        <label htmlFor={id} className={themeClasses.label}>
+          {label} {required && <span className="text-destructive">*</span>}
+        </label>
+      )}
+
+      <div className={themeClasses.wrapper} onClick={() => !disabled && setIsOpen(true)}>
+        {isFloating && label && (
+          <label htmlFor={id} className={themeClasses.label}>
+            {label} {required && <span className="text-destructive">*</span>}
+          </label>
+        )}
+
+        {startAdornment && (
+          <div className="flex items-center text-muted-foreground mr-1">{startAdornment}</div>
+        )}
+
+        <input
+          id={id}
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={() => {
+            setIsFocused(true);
+          }}
+          onBlur={() => {
+            setIsFocused(false);
+          }}
+          disabled={disabled}
+          placeholder={isFloating && !isFocused && !inputValue ? "" : placeholder}
+          className={themeClasses.input}
+          autoComplete="off"
+        />
+
+        <div className="flex items-center gap-2 ml-auto">
+          {onClear && value && !disabled && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClear();
+                setInputValue("");
+                onChange?.(null);
+              }}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              ✕
+            </button>
+          )}
+          {endAdornment || CalendarIcon}
+        </div>
+      </div>
+
+      {error && <span className={themeClasses.errorText}>{error}</span>}
+
+      {isOpen && !disabled && (
+        <div className="absolute top-full left-0 z-50 mt-1 shadow-xl rounded-lg animate-in fade-in zoom-in-95 duration-200">
+          <Calendar
+            value={value}
+            onChange={(date) => {
+              onChange?.(date);
+              setInputValue(formatDate(date, format));
+              setIsOpen(false);
+            }}
+            minDate={min}
+            maxDate={max}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
