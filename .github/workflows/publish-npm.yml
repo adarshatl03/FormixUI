@@ -81,11 +81,8 @@ jobs:
       - name: Build Documentation Site 🏗️
         run: npm run build:site
 
-      - name: Deploy to Public GitHub Pages 🚀
+      - name: Deploy to Documentation Site 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist-site
           branch: gh-pages
-          repository-name: adarshatl03/formix-ui # Target the public repo
-          token: ${{ secrets.PUBLIC_REPO_TOKEN }} # Authorization token
-
