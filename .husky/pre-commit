@@ -1,2 +1,5 @@
+npm run update-status
+git add README.md
 npx lint-staged
 npx tsc --noEmit
+
