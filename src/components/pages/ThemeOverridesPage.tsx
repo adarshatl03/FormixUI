@@ -63,6 +63,31 @@ const COMPONENT_TITLES: Record<string, string> = {
   textarea: "Textarea",
   fileInput: "File Input",
   datePicker: "Date Picker",
+  dateRangePicker: "Date Range Picker",
+  timePicker: "Time Picker",
+  dateTimePicker: "Date Time Picker",
+
+  // Feedback
+  alert: "Alert",
+  dialog: "Dialog",
+  toast: "Toast",
+  tooltip: "Tooltip",
+  sheet: "Sheet",
+
+  // Advanced
+  richText: "Rich Text Editor",
+  colorPicker: "Color Picker",
+  rating: "Rating",
+  treeView: "Tree View",
+  upload: "File Upload",
+  virtualScroll: "Virtual Scroll",
+
+  // Layout
+  card: "Card",
+  tabs: "Tabs",
+  accordion: "Accordion",
+  breadcrumb: "Breadcrumb",
+  sidebar: "Sidebar",
 };
 
 const THEME_PRESETS: Record<
@@ -275,24 +300,62 @@ export const ThemeOverridesPage = () => {
             Components
           </h2>
           <div className="space-y-1">
-            {Object.keys(defaultTheme)
-              .filter((key) => key !== "global")
-              .map((key) => {
-                const title = COMPONENT_TITLES[key] || key;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => setActiveSlug(key)}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-                      activeSlug === key
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "hover:bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {title}
-                  </button>
-                );
-              })}
+            {/* Categorized Component List */}
+            {Object.entries({
+              "Base Inputs": ["textInput", "textarea", "fileInput"],
+              Selection: ["checkbox", "radio", "switch", "select", "autocomplete"],
+              "Date & Time": ["datePicker", "dateTimePicker", "dateRangePicker", "timePicker"],
+              "Feedback / Overlay": ["alert", "dialog", "toast", "tooltip", "sheet"],
+              "Advanced / Data": [
+                "richText",
+                "colorPicker",
+                "rating",
+                "treeView",
+                "upload",
+                "virtualScroll",
+              ],
+              Layout: ["card", "tabs", "accordion", "breadcrumb", "sidebar"],
+            }).map(([category, slugs]) => (
+              <div key={category} className="mb-6">
+                <h3 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground/70 mb-2 pl-3">
+                  {category}
+                </h3>
+                <div className="space-y-1">
+                  {slugs.map((slug) => {
+                    const exists = !!defaultTheme[slug as keyof typeof defaultTheme];
+                    const title = COMPONENT_TITLES[slug] || slug;
+
+                    if (!exists) {
+                      return (
+                        <div
+                          key={slug}
+                          className="w-full text-left px-3 py-2 rounded-md text-sm text-muted-foreground/40 border-l-2 border-transparent flex justify-between items-center cursor-not-allowed"
+                        >
+                          {title}
+                          <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">
+                            Planned
+                          </span>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={slug}
+                        onClick={() => setActiveSlug(slug)}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors border-l-2 ${
+                          activeSlug === slug
+                            ? "bg-primary/10 text-primary font-medium border-primary"
+                            : "hover:bg-muted text-muted-foreground border-transparent hover:border-border"
+                        }`}
+                      >
+                        {title}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -427,42 +490,153 @@ export const ThemeOverridesPage = () => {
               <h3 className="font-bold text-sm tracking-tight">
                 {variant === "light" ? "Light Variables" : "Dark Variables"}
               </h3>
-              <button
-                onClick={() => setVars(THEME_PRESETS[activePreset][variant])}
-                className="text-[10px] font-bold text-primary uppercase hover:underline"
-              >
-                Reset
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    // Generate Vanilla CSS
+                    const cssContent = `/* 
+ * Formik UI - Vanilla CSS Fallback
+ * Generated for "No Tailwind" environments
+ * --------------------------------------
+ */
+:root {
+${Object.entries(currentVars)
+  .map(([k, v]) => `  ${k}: ${v};`)
+  .join("\n")}
+}
+
+/* Boilerplate Structural Classes used in DefaultTheme */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1\\.5 { gap: 0.375rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mt-1 { margin-top: 0.25rem; }
+.w-full { width: 100%; }
+.h-10 { height: 2.5rem; }
+.h-4 { height: 1rem; }
+.w-4 { width: 1rem; }
+.rounded-md { border-radius: 0.375rem; }
+.border { border-style: solid; border-width: 1px; }
+.border-2 { border-style: solid; border-width: 2px; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.font-medium { font-weight: 500; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+.cursor-pointer { cursor: pointer; }
+.outline-none { outline: 2px solid transparent; outline-offset: 2px; }
+.transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.bg-transparent { background-color: transparent; }
+
+/* Colors Mappings */
+.bg-background { background-color: var(--color-background); }
+.bg-primary { background-color: var(--color-primary); }
+.bg-border { background-color: var(--color-border); }
+.text-primary { color: var(--color-primary); }
+.text-primary-foreground { color: var(--color-primary-foreground); }
+.text-destructive { color: var(--color-destructive); }
+.text-muted-foreground { color: var(--color-muted-foreground); }
+.text-foreground { color: var(--color-foreground); }
+.border-input { border-color: var(--color-input); }
+.border-primary { border-color: var(--color-primary); }
+.border-destructive { border-color: var(--color-destructive); }
+`;
+                    const blob = new Blob([cssContent], { type: "text/css" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "form-engine-vanilla.css";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                  }}
+                  className="text-[10px] bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900 px-2 py-0.5 rounded font-bold uppercase hover:opacity-90"
+                >
+                  Download CSS
+                </button>
+                <button
+                  onClick={() => setVars(THEME_PRESETS[activePreset][variant])}
+                  className="text-[10px] font-bold text-primary uppercase hover:underline"
+                >
+                  Reset
+                </button>
+              </div>
             </div>
 
             <div className="space-y-5">
-              {Object.entries(currentVars).map(([key, val]) => (
-                <div key={key} className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
-                    {key.replace("--color-", "").replace("-", " ")}
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <div className="relative group p-0.5 rounded-md border border-border bg-muted/30">
+              {Object.entries(currentVars)
+                .filter(([key]) => {
+                  const k = key.toLowerCase();
+                  // Always show background/foreground
+                  if (k.includes("background") || k.includes("foreground")) return true;
+
+                  // Component specific filters
+                  if (activeSlug === "global") return true;
+
+                  // Text Input / Textarea / Select / Autocomplete -> Show border, input, ring, destructive
+                  const isInput = [
+                    "textInput",
+                    "textarea",
+                    "select",
+                    "autocomplete",
+                    "fileInput",
+                    "datePicker",
+                  ].includes(activeSlug);
+
+                  if (isInput) {
+                    if (
+                      k.includes("border") ||
+                      k.includes("input") ||
+                      k.includes("ring") ||
+                      k.includes("destructive")
+                    )
+                      return true;
+                  }
+
+                  // Checkbox/Radio/Switch -> Show control-checked, ring
+                  const isControl = ["checkbox", "radio", "switch"].includes(activeSlug);
+                  if (isControl) {
+                    if (k.includes("control") || k.includes("ring") || k.includes("primary"))
+                      return true;
+                  }
+
+                  return false;
+                })
+                .map(([key, val]) => (
+                  <div key={key} className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                      {key.replace("--color-", "").replace("-", " ")}
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <div className="relative group p-0.5 rounded-md border border-border bg-muted/30">
+                        <input
+                          type="color"
+                          value={val}
+                          onChange={(e) => setVars((prev) => ({ ...prev, [key]: e.target.value }))}
+                          className="h-8 w-12 rounded cursor-pointer p-0 opacity-0 absolute inset-0 z-10"
+                        />
+                        <div
+                          className="h-8 w-12 rounded shadow-inner"
+                          style={{ backgroundColor: val }}
+                        />
+                      </div>
                       <input
-                        type="color"
+                        type="text"
                         value={val}
                         onChange={(e) => setVars((prev) => ({ ...prev, [key]: e.target.value }))}
-                        className="h-8 w-12 rounded cursor-pointer p-0 opacity-0 absolute inset-0 z-10"
-                      />
-                      <div
-                        className="h-8 w-12 rounded shadow-inner"
-                        style={{ backgroundColor: val }}
+                        className="h-9 flex-1 rounded-md border border-input bg-background/50 px-3 text-xs font-mono focus:ring-1 focus:ring-primary outline-none transition-all"
                       />
                     </div>
-                    <input
-                      type="text"
-                      value={val}
-                      onChange={(e) => setVars((prev) => ({ ...prev, [key]: e.target.value }))}
-                      className="h-9 flex-1 rounded-md border border-input bg-background/50 px-3 text-xs font-mono focus:ring-1 focus:ring-primary outline-none transition-all"
-                    />
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

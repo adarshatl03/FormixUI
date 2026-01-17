@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### **CLI 3.0 Power Tools**
 
 - **Dynamic Package Names**: Users can now specify a custom `packageName` during `init` for highly tailored local installations.
-- **Component Tracking**: The new `r-form.json` config tracks every component installed in `copy` mode.
+- **Component Tracking**: The new `formix.config.json` config tracks every component installed in `copy` mode.
 - **`update` Command**: Introduced a powerful `update` command to automatically synchronize your local component source files with the latest upstream library versions.
 - **Intelligent Dependency Resolution**: The `add` and `update` commands now recursively manage internal dependencies (like `theme-core` and `date-utils`).
 

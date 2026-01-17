@@ -1,0 +1,27 @@
+{
+  "version": "0.0.2",
+  "percent": 27,
+  "counts": {
+    "completed": 27,
+    "inProgress": 72,
+    "recurring": 3,
+    "total": 99
+  },
+  "features": {
+    "completed": [
+      "**Button**: Standard interactive button.",
+      "**Checkbox**: Binary selection control.",
+      "**Combobox (Autocomplete)**: Input with filtered suggestions.",
+      "**Date Picker**: Date selection interactive calendar.",
+      "**Date Range Picker**: Date range selection."
+    ],
+    "inProgress": [
+      "Locale switcher UI",
+      "Week start UI",
+      "Week number toggle UI",
+      "Time step UI",
+      "Focus trapping (modals)"
+    ]
+  },
+  "lastUpdated": "2026-01-17T20:19:29.743Z"
+}

@@ -25,7 +25,7 @@ PACKAGES.forEach((pkg) => {
   const packageJson = {
     name: pkgName,
     version: "0.0.0",
-    description: `Placeholder for ${pkgName} - Part of the Formix UI ecosystem`,
+    description: `Placeholder for ${pkgName} - Part of the FormixUI ecosystem`,
     main: "index.js",
     repository: {
       type: "git",
@@ -45,7 +45,7 @@ PACKAGES.forEach((pkg) => {
 
 🚧 **Coming Soon**
 
-This package is reserved as part of the [Formix UI](https://github.com/adarshatl03/formix-ui) ecosystem.
+This package is reserved as part of the [FormixUI](https://github.com/adarshatl03/formix-ui) ecosystem.
 
 Please check back later for updates!
 `;

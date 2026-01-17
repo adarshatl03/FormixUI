@@ -114,11 +114,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         }
       }}
       disabled={disabled}
-      className={`focus:outline-none transition-colors ${
-        disabled
-          ? "text-muted-foreground cursor-not-allowed opacity-50"
-          : "hover:text-primary cursor-pointer text-muted-foreground"
-      }`}
+      className={themeClasses.calendarIcon}
       tabIndex={-1}
     >
       <svg
@@ -190,7 +186,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                 setInputValue("");
                 onChange?.(null);
               }}
-              className="text-muted-foreground hover:text-foreground"
+              className={themeClasses.clearButton}
             >
               ✕
             </button>
@@ -201,7 +197,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
       {error && <span className={themeClasses.errorText}>{error}</span>}
       {isOpen && !disabled && (
-        <div className="absolute top-full left-0 z-50 mt-1 shadow-xl rounded-lg animate-in fade-in zoom-in-95 duration-200 flex overflow-hidden ring-1 ring-black/5 bg-white dark:bg-zinc-950">
+        <div className={themeClasses.popover}>
           <Calendar value={value} onChange={handleDateChange} minDate={min} maxDate={max} />
           <TimeView value={value} onChange={handleTimeChange} />
         </div>

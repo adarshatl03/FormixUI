@@ -99,7 +99,9 @@ export const BaseField = ({
   }, [startAdornment, endAdornment, error]);
 
   return (
-    <div className={`relative ${fullWidth ? "w-full" : "w-auto"} ${className} mb-4 rfe-field-root`}>
+    <div
+      className={`relative ${fullWidth ? "w-full" : "w-auto"} ${className} mb-4 formix-field-root`}
+    >
       <LabelWrapper
         id={id}
         label={label}
@@ -109,12 +111,12 @@ export const BaseField = ({
         required={required}
         disabled={disabled}
       >
-        <div className="relative flex items-center rfe-field-wrapper">
+        <div className="relative flex items-center formix-field-wrapper">
           {/* Start Adornment */}
           {startAdornment && (
             <div
               ref={startRef}
-              className="absolute left-3 text-slate-400 pointer-events-none flex items-center justify-center rfe-field-start-adornment"
+              className="absolute left-3 text-slate-400 pointer-events-none flex items-center justify-center formix-field-start-adornment"
             >
               {startAdornment}
             </div>
@@ -134,7 +136,7 @@ export const BaseField = ({
           {(endAdornment || error || onClear) && (
             <div
               ref={endRef}
-              className="absolute right-3 flex items-center gap-2 z-10 rfe-field-end-adornment"
+              className="absolute right-3 flex items-center gap-2 z-10 formix-field-end-adornment"
             >
               {onClear && hasValue && (
                 <button
@@ -144,7 +146,7 @@ export const BaseField = ({
                     e.stopPropagation();
                     onClear();
                   }}
-                  className="text-slate-400 hover:text-red-500 transition-colors focus:outline-none rfe-field-clear-btn"
+                  className="text-slate-400 hover:text-red-500 transition-colors focus:outline-none formix-field-clear-btn"
                   aria-label="Clear value"
                 >
                   <svg
@@ -164,12 +166,12 @@ export const BaseField = ({
                 </button>
               )}
               {endAdornment && (
-                <span className="flex items-center text-slate-400 rfe-field-adornment-content">
+                <span className="flex items-center text-slate-400 formix-field-adornment-content">
                   {endAdornment}
                 </span>
               )}
               {error && (
-                <div className="rfe-field-error-icon">
+                <div className="formix-field-error-icon">
                   <ErrorTooltip error={error} />
                 </div>
               )}

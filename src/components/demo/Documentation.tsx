@@ -4,7 +4,7 @@ export const Documentation = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-8 rounded-2xl border border-border">
         <h1 className="text-4xl font-bold mb-3">
-          Formix <span className="text-primary">UI</span> Documentation
+          Formix<span className="text-primary">UI</span> Documentation
         </h1>
         <p className="text-lg text-muted-foreground">
           A powerful, schema-driven form engine for React with comprehensive validation and
@@ -32,11 +32,22 @@ export const Documentation = () => {
               {`import { SchemaForm } from 'formix-ui';
 
 const schema = {
-  fields: [{ id: 'name', type: 'text', label: 'Name' }]
+  fields: [
+    { 
+      id: 'name', 
+      type: 'text', 
+      label: 'Name' 
+    }
+  ]
 };
 
 export default function App() {
-  return <SchemaForm schema={schema} onSubmit={console.log} />;
+  return (
+    <SchemaForm 
+      schema={schema} 
+      onSubmit={console.log} 
+    />
+  );
 }`}
             </pre>
           </div>
@@ -225,9 +236,19 @@ import 'formix-ui/styles';`}
             <h3 className="font-semibold mb-2">Example</h3>
             <pre className="bg-surface-900 text-primary p-4 rounded-lg overflow-x-auto text-sm">
               {`validation: [
-  { type: "required", message: "This field is required" },
-  { type: "minLength", value: 3, message: "Min 3 characters" },
-  { type: "email", message: "Invalid email format" }
+  { 
+    type: "required", 
+    message: "This field is required" 
+  },
+  { 
+    type: "minLength", 
+    value: 3, 
+    message: "Min 3 characters" 
+  },
+  { 
+    type: "email", 
+    message: "Invalid email format" 
+  }
 ]`}
             </pre>
           </div>
@@ -251,7 +272,11 @@ import 'formix-ui/styles';`}
   label: "Specify Role",
   type: "text",
   visibilityRules: [
-    { field: "role", operator: "eq", value: "other" }
+    { 
+      field: "role", 
+      operator: "eq", 
+      value: "other" 
+    }
   ],
   reserveSpace: true // Keeps layout stable
 }`}
@@ -279,9 +304,9 @@ import 'formix-ui/styles';`}
         <pre className="bg-surface-900 text-primary p-4 rounded-lg overflow-x-auto text-sm">
           {`grid: {
   colSpan: 6,    // Desktop (default)
-  xs: 12,        // Mobile (<640px) - full width
-  sm: 6,         // Tablet (640px+) - half width
-  lg: 4          // Large desktop (1024px+) - third width
+  xs: 12,        // Mobile (<640px)
+  sm: 6,         // Tablet (640px+)
+  lg: 4          // Desktop (1024px+)
 }`}
         </pre>
 
@@ -335,7 +360,7 @@ import 'formix-ui/styles';`}
           </div>
 
           <pre className="bg-surface-900 text-primary p-4 rounded-lg overflow-x-auto text-sm">
-            {`import { FormBuilder } from 'r-form-engine';
+            {`import { FormBuilder } from 'formix-ui';
 
 function App() {
   return <FormBuilder />;

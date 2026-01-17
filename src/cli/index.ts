@@ -11,7 +11,7 @@ import { registry, getComponent } from "./registry.js";
 
 // Tailwind v4 CSS Template
 const TAILWIND_V4_CSS = `@import "tailwindcss";
-@source "../node_modules/r-form-engine/dist";
+@source "../node_modules/formix-ui/dist";
 
 @variant dark (&:where(.dark, .dark *));
 
@@ -220,9 +220,9 @@ const generateLandingPageContent = (config: any, version: string) => {
 
   // Note: We use Tailwind v4 classes assuming it's configured.
   // We use standard React imports since the library handles the rest.
-  return `${isNext ? '"use client";\n' : ""}import { ${componentToUse}, ThemeProvider } from 'r-form-engine';
-import type { FormSchema } from 'r-form-engine';
-${isNext ? "import './globals.css';" : "import 'r-form-engine/styles';"}
+  return `${isNext ? '"use client";\n' : ""}import { ${componentToUse}, ThemeProvider } from 'formix-ui';
+import type { FormSchema } from 'formix-ui';
+${isNext ? "import './globals.css';" : "import 'formix-ui/styles';"}
 
 const schema: FormSchema = {
   title: "Welcome to FormEngine",
@@ -325,7 +325,7 @@ export default function ${isNext ? "Page" : "App"}() {
         </main>
 
         <footer className="mt-20 text-muted-foreground font-medium text-sm">
-          Built with r-form-engine • The modern form stack
+          Built with formix-ui • The modern form stack
         </footer>
       </div>
     </ThemeProvider>
@@ -351,16 +351,13 @@ const readPackageFile = (relativePath: string) => {
 };
 
 // Utility: Check if config exists
-const CONFIG_FILE = "r-form.json";
+const CONFIG_FILE = "formix.config.json";
 const hasConfig = () => fs.existsSync(path.resolve(process.cwd(), CONFIG_FILE));
 const getConfig = () => fs.readJSONSync(path.resolve(process.cwd(), CONFIG_FILE));
 
 const program = new Command();
 
-program
-  .name("r-form-engine")
-  .description("CLI for r-form-engine")
-  .version(getPackageParam("version"));
+program.name("formix-ui").description("CLI for formix-ui").version(getPackageParam("version"));
 
 program
   .command("add")
@@ -380,7 +377,7 @@ program
         initial: true,
       });
       if (confirm.init) {
-        console.log(chalk.blue("Please run 'npx r-form-engine init' first."));
+        console.log(chalk.blue("Please run 'npx formix-ui init' first."));
         return;
       }
       return;
@@ -388,7 +385,7 @@ program
 
     const config = getConfig();
     const componentsDir = config.paths?.components || "src/components/ui";
-    const coreDir = config.paths?.core || "src/components/r-form";
+    const coreDir = config.paths?.core || "src/components/formix";
 
     let componentsToAdd = componentName ? [componentName] : [];
 
@@ -575,7 +572,7 @@ program
     const spinner = ora("Updating components...").start();
 
     const componentsDir = config.paths?.components || "src/components/ui";
-    const coreDir = config.paths?.core || "src/components/r-form";
+    const coreDir = config.paths?.core || "src/components/formix";
 
     const resolvedList = new Set<string>();
     const resolveDeps = (name: string) => {
@@ -649,14 +646,14 @@ program
 
 program
   .command("init")
-  .description("Initialize r-form-engine in your project")
+  .description("Initialize formix-ui in your project")
   .action(async () => {
-    console.log(chalk.blue.bold("\n🚀 Initializing r-form-engine...\n"));
+    console.log(chalk.blue.bold("\n🚀 Initializing formix-ui...\n"));
 
     const mode = await prompts({
       type: "select",
       name: "mode",
-      message: "How would you like to use r-form-engine?",
+      message: "How would you like to use formix-ui?",
       choices: [
         {
           title: "Library (npm install)",
@@ -681,7 +678,7 @@ program
 
 program
   .command("create")
-  .description("Create a new r-form-engine project")
+  .description("Create a new formix-ui project")
   .argument("[name]", "Project name")
   .action(async (projectName) => {
     let targetDir = projectName;
@@ -769,13 +766,13 @@ program
         await execa("npx", args, { stdio: "inherit" });
       }
 
-      console.log(chalk.green("\nProject scaffolded. Initializing r-form-engine..."));
+      console.log(chalk.green("\nProject scaffolded. Initializing formix-ui..."));
 
       process.chdir(projectPath);
 
-      const spinner = ora("Installing r-form-engine dependencies...").start();
+      const spinner = ora("Installing formix-ui dependencies...").start();
 
-      const deps = ["r-form-engine"];
+      const deps = ["formix-ui"];
       if (frameworkConfig.validationLib === "zod") deps.push("zod");
       if (frameworkConfig.validationLib === "yup") deps.push("yup");
       if (frameworkConfig.formState === "rhf") deps.push("react-hook-form", "@hookform/resolvers");
@@ -891,7 +888,7 @@ async function runLibraryInit() {
       type: "text",
       name: "packageName",
       message: "What is the package name you are using?",
-      initial: "r-form-engine",
+      initial: "formix-ui",
     },
     {
       type: "confirm",
@@ -931,7 +928,7 @@ async function runLibraryInit() {
       name: "formState",
       message: "Which form state manager would you like to use?",
       choices: [
-        { title: "Standard (r-form-engine)", value: "standard" },
+        { title: "Standard (formix-ui)", value: "standard" },
         { title: "Formik", value: "formik" },
         { title: "React Hook Form", value: "rhf" },
       ],
@@ -1018,7 +1015,7 @@ async function runCopyInit() {
       type: "text",
       name: "packageName",
       message: "What is the package name you are using?",
-      initial: "r-form-engine",
+      initial: "formix-ui",
     },
     {
       type: "text",
@@ -1032,7 +1029,7 @@ async function runCopyInit() {
       name: "coreDir",
       message: "Where should we place core files (theme, utils)?",
       initial: (_, values) =>
-        values.framework === "next" ? "app/components/r-form" : "src/components/r-form",
+        values.framework === "next" ? "app/components/formix" : "src/components/formix",
     },
     {
       type: "confirm",
@@ -1097,7 +1094,7 @@ async function runCopyInit() {
 
     spinner.succeed("Configuration saved.");
     console.log(chalk.green("You are set up! Run this to install the core system:"));
-    console.log(chalk.cyan("npx r-form-engine add theme-core"));
+    console.log(chalk.cyan("npx formix-ui add theme-core"));
   } catch (e) {
     spinner.fail("Initialization failed");
     console.error(e);
@@ -1105,7 +1102,7 @@ async function runCopyInit() {
 }
 
 async function configureTailwindInternal(version: string, localMode = false) {
-  const config = hasConfig() ? getConfig() : { packageName: "r-form-engine" };
+  const config = hasConfig() ? getConfig() : { packageName: "formix-ui" };
   // Locate CSS file
   const cssFiles = ["src/index.css", "src/globals.css", "src/App.css", "styles/globals.css"];
   const foundCss = cssFiles.find((f) => fs.existsSync(path.resolve(process.cwd(), f)));
@@ -1130,10 +1127,10 @@ async function configureTailwindInternal(version: string, localMode = false) {
     if (!foundCss) {
       let template = TAILWIND_V4_CSS;
       if (localMode) {
-        template = template.replace(`@source "../node_modules/r-form-engine/dist";`, "");
+        template = template.replace(`@source "../node_modules/formix-ui/dist";`, "");
       } else {
         template = template.replace(
-          `@source "../node_modules/r-form-engine/dist";`,
+          `@source "../node_modules/formix-ui/dist";`,
           `@source "../node_modules/${config.packageName}/dist";`
         );
       }

@@ -28,6 +28,11 @@ export interface ComponentTheme {
   list?: StyleOrFn; // e.g. autocomplete list
   item?: StyleOrFn; // e.g. autocomplete item
   tag?: StyleOrFn; // e.g. autocomplete chip
+
+  // Date/Time specific slot
+  calendarIcon?: StyleOrFn;
+  clearButton?: StyleOrFn;
+  popover?: StyleOrFn;
 }
 
 export interface FormTheme {

@@ -1,5 +1,14 @@
 import { useMemo } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
+import {
+  Home as HomeIcon,
+  BookOpen,
+  Terminal,
+  Hammer,
+  LayoutGrid,
+  Palette,
+  Map as MapIcon,
+} from "lucide-react";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { FormBuilder } from "@/components/builder/FormBuilder";
@@ -7,11 +16,16 @@ import { PlaygroundPage } from "@/components/playground/PlaygroundPage";
 import { Documentation } from "@/components/demo/Documentation";
 import { Home } from "@/components/pages/Home";
 import { ReadmePage } from "@/components/pages/ReadmePage";
-import { GuidePage } from "@/components/pages/GuidePage";
 import { ChangelogPage } from "@/components/pages/ChangelogPage";
-import { TasksPage } from "@/components/pages/TasksPage";
 import { ThemeOverridesPage } from "@/components/pages/ThemeOverridesPage";
 import { DemoPage } from "@/components/pages/DemoPage";
+import {
+  CliGuidePage,
+  UsageGuidePage,
+  TasksPage,
+  EcosystemPage,
+  ContributingPage,
+} from "@/components/pages/docs/DocPages";
 import type { FormSchema } from "@/types/schema";
 
 const App = () => {
@@ -23,7 +37,7 @@ const App = () => {
   };
 
   const navItemClass = (path: string) =>
-    `px-3 py-1.5 text-sm font-medium rounded-md transition-all ${
+    `px-3 py-1.5 text-sm font-medium rounded-md transition-all whitespace-nowrap ${
       isActive(path)
         ? "text-primary bg-primary/10"
         : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -231,8 +245,8 @@ const App = () => {
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
+            <Link to="/" className="flex items-center gap-2 mr-4">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shrink-0">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -250,48 +264,53 @@ const App = () => {
                   <path d="M9 17h6" />
                 </svg>
               </div>
-              <h1 className="font-bold text-xl tracking-tight hidden sm:block">
-                Formix UI Documentation
+              <h1 className="font-extrabold text-2xl tracking-tight hidden lg:block bg-linear-to-br from-foreground via-foreground/90 to-primary/50 bg-clip-text text-transparent">
+                FormixUI
               </h1>
             </Link>
 
-            <div className="flex items-center gap-4">
-              <nav className="flex items-center gap-1 overflow-x-auto">
+            <div className="flex items-center flex-1 overflow-x-auto no-scrollbar mask-gradient">
+              <nav className="flex items-center gap-1">
                 <Link to="/" className={navItemClass("/")}>
+                  <HomeIcon className="w-4 h-4 mr-2 inline-block" />
                   Home
                 </Link>
-                <Link to="/readme" className={navItemClass("/readme")}>
-                  Readme
-                </Link>
                 <div className="h-4 w-px bg-border mx-1" />
-                <Link to="/demo" className={navItemClass("/demo")}>
-                  Demo
+
+                <Link to="/guide" className={navItemClass("/guide")}>
+                  <BookOpen className="w-4 h-4 mr-2 inline-block" />
+                  Guide
                 </Link>
+                <Link to="/cli" className={navItemClass("/cli")}>
+                  <Terminal className="w-4 h-4 mr-2 inline-block" />
+                  CLI
+                </Link>
+
+                <div className="h-4 w-px bg-border mx-1" />
+
                 <Link to="/builder" className={navItemClass("/builder")}>
+                  <Hammer className="w-4 h-4 mr-2 inline-block" />
                   Builder
                 </Link>
                 <Link to="/playground" className={navItemClass("/playground")}>
+                  <LayoutGrid className="w-4 h-4 mr-2 inline-block" />
                   Playground
                 </Link>
+
                 <div className="h-4 w-px bg-border mx-1" />
-                <Link to="/docs" className={navItemClass("/docs")}>
-                  API
-                </Link>
-                <Link to="/guide" className={navItemClass("/guide")}>
-                  Guide
-                </Link>
-                <Link to="/changelog" className={navItemClass("/changelog")}>
-                  Changes
+
+                <Link to="/theme" className={navItemClass("/theme")}>
+                  <Palette className="w-4 h-4 mr-2 inline-block" />
+                  UI
                 </Link>
                 <Link to="/tasks" className={navItemClass("/tasks")}>
-                  Tasks
-                </Link>
-                <div className="h-4 w-px bg-border mx-1" />
-                <Link to="/theme" className={navItemClass("/theme")}>
-                  Theming
+                  <MapIcon className="w-4 h-4 mr-2 inline-block" />
+                  Roadmap
                 </Link>
               </nav>
-              <div className="h-6 w-px bg-border mx-2 hidden sm:block" />
+            </div>
+
+            <div className="ml-4 flex items-center gap-2 pl-2 border-l border-border bg-background/80">
               <ThemeSwitcher />
             </div>
           </div>
@@ -305,11 +324,16 @@ const App = () => {
               <Route path="/builder" element={<FormBuilder />} />
               <Route path="/playground/*" element={<PlaygroundPage />} />
               <Route path="/docs" element={<Documentation />} />
-              <Route path="/guide" element={<GuidePage />} />
-              <Route path="/changelog" element={<ChangelogPage />} />
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/theme" element={<ThemeOverridesPage />} />
               <Route path="/demo" element={<DemoPage schema={ultimateSchema} />} />
+              <Route path="/changelog" element={<ChangelogPage />} />
+              <Route path="/theme" element={<ThemeOverridesPage />} />
+
+              {/* Documentation Pages */}
+              <Route path="/guide" element={<UsageGuidePage />} />
+              <Route path="/cli" element={<CliGuidePage />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/ecosystem" element={<EcosystemPage />} />
+              <Route path="/contributing" element={<ContributingPage />} />
             </Routes>
           </div>
         </main>

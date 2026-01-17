@@ -114,19 +114,19 @@ export const GuidePage = () => {
             </thead>
             <tbody className="divide-y divide-border">
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine init</td>
+                <td className="p-3 font-mono">npx formix-ui init</td>
                 <td className="p-3 text-muted-foreground">Context-aware initialization</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine create [name]</td>
+                <td className="p-3 font-mono">npx formix-ui create [name]</td>
                 <td className="p-3 text-muted-foreground">Scaffold new project</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine add [component]</td>
+                <td className="p-3 font-mono">npx formix-ui add [component]</td>
                 <td className="p-3 text-muted-foreground">Add components shadcn-style</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine update</td>
+                <td className="p-3 font-mono">npx formix-ui update</td>
                 <td className="p-3 text-muted-foreground">Keep components syncing</td>
               </tr>
             </tbody>
@@ -146,19 +146,19 @@ export const GuidePage = () => {
             </thead>
             <tbody className="divide-y divide-border">
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine init</td>
+                <td className="p-3 font-mono">npx formix-ui init</td>
                 <td className="p-3 text-muted-foreground">Context-aware initialization</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine create [name]</td>
+                <td className="p-3 font-mono">npx formix-ui create [name]</td>
                 <td className="p-3 text-muted-foreground">Scaffold new project</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine add [component]</td>
+                <td className="p-3 font-mono">npx formix-ui add [component]</td>
                 <td className="p-3 text-muted-foreground">Add components shadcn-style</td>
               </tr>
               <tr>
-                <td className="p-3 font-mono">npx r-form-engine update</td>
+                <td className="p-3 font-mono">npx formix-ui update</td>
                 <td className="p-3 text-muted-foreground">Keep components syncing</td>
               </tr>
             </tbody>

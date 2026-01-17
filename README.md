@@ -1,4 +1,41 @@
-# 🚀 Formix UI
+# 🚀 FormixUI
+
+<!-- PROJECT_STATUS_START -->
+<div align="center">
+
+  <h3>🚀 Project Status: 27% Complete</h3>
+
+  <img src="https://progress-bar.dev/27/?scale=100&title=progress&width=600&color=00ff00&suffix=%25" alt="Progress Bar">
+
+  <br/>
+
+| 📦 Version | ✅ Completed | 🚧 In Progress | 🔄 Recurring | 📅 Upcoming |
+| :--------: | :----------: | :------------: | :----------: | :---------: |
+| **v0.0.2** |    **27**    |     **9**      |    **3**     |   **63**    |
+
+</div>
+
+<details open>
+<summary><h3>📅 Recent Activity & Roadmap</h3></summary>
+
+| **✨ Recently Completed** | **🚧 In Progress / Planned** |
+| :------------------------ | :--------------------------- |
+
+| <ul><li>✅ **Button**: Standard interactive button.</li>
+
+<li>✅ **Checkbox**: Binary selection control.</li>
+<li>✅ **Combobox (Autocomplete)**: Input with filtered suggestions.</li>
+<li>✅ **Date Picker**: Date selection interactive calendar.</li>
+<li>✅ **Date Range Picker**: Date range selection.</li></ul> | <ul><li>🚧 Locale switcher UI</li>
+<li>🚧 Week start UI</li>
+<li>🚧 Week number toggle UI</li>
+<li>🚧 Time step UI</li>
+<li>🚧 Focus trapping (modals)</li></ul> |
+
+</details>
+
+<br/>
+<!-- PROJECT_STATUS_END -->
 
 [![npm version](https://img.shields.io/npm/v/formix-ui.svg)](https://www.npmjs.com/package/formix-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -249,7 +286,7 @@ type ValidationRule =
 
 ## 🎨 Theming
 
-Formix UI uses Tailwind CSS 4.1 with CSS variables for theming:
+FormixUI uses Tailwind CSS 4.1 with CSS variables for theming:
 
 ```css
 @theme {
@@ -338,4 +375,4 @@ MIT © Adarsh A
 
 ---
 
-**Made with ❤️ by the Formix UI team**
+**Made with ❤️ by the FormixUI team**

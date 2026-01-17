@@ -6,21 +6,21 @@
    BASE PALETTE (STATIC)
 ========================================= */
 :root {
-  --color-primary:#003c71;
-  --color-secondary:#ff681d;
+  --color-primary: #003c71;
+  --color-secondary: #ff681d;
   --brand-secondary-orange: #ff681d; /* New explicit brand variable */
   --zinc-0: #ffffff;
   --zinc-50: oklch(0.985 0.01 240);
   --zinc-100: oklch(0.965 0.01 240);
-  --zinc-200: oklch(0.920 0.02 240);
-  --zinc-300: oklch(0.870 0.03 240);
-  --zinc-400: oklch(0.700 0.04 240);
-  --zinc-500: oklch(0.550 0.05 240);
-  --zinc-600: oklch(0.440 0.05 240);
-  --zinc-700: oklch(0.350 0.05 240);
-  --zinc-800: oklch(0.270 0.05 240);
-  --zinc-900: oklch(0.200 0.04 240);
-  --zinc-950: oklch(0.130 0.03 240);
+  --zinc-200: oklch(0.92 0.02 240);
+  --zinc-300: oklch(0.87 0.03 240);
+  --zinc-400: oklch(0.7 0.04 240);
+  --zinc-500: oklch(0.55 0.05 240);
+  --zinc-600: oklch(0.44 0.05 240);
+  --zinc-700: oklch(0.35 0.05 240);
+  --zinc-800: oklch(0.27 0.05 240);
+  --zinc-900: oklch(0.2 0.04 240);
+  --zinc-950: oklch(0.13 0.03 240);
 
   --primary-400: oklch(0.65 0.18 260);
   --primary-500: oklch(0.55 0.22 260);
@@ -33,11 +33,10 @@
    LIGHT THEME (VISIBLY LIGHT)
 ========================================= */
 :root {
-
-  --color-background: var(--zinc-50);
+  --color-background: var(--zinc-0);
   --color-foreground: var(--zinc-900);
 
-  --color-card: var(--zinc-0);
+  --color-card: var(--zinc-50);
   --color-card-foreground: var(--zinc-900);
 
   --color-popover: var(--zinc-0);
@@ -58,11 +57,12 @@
   --color-destructive: oklch(0.63 0.26 29);
   --color-destructive-foreground: #ffffff;
 
-  --color-border: var(--zinc-300);
-  --color-input: var(--zinc-0);
+  --color-border: var(--zinc-200);
+  --color-input: var(--zinc-300); /* Darker for sufficient contrast */
   --color-ring: var(--primary-500);
-  
+
   --color-control-checked: var(--color-primary);
+  --color-control-default: var(--zinc-300); /* Darker than border for better visibility */
 
   --color-tooltip-bg: var(--zinc-900);
   --color-tooltip-text: #ffffff;
@@ -74,12 +74,11 @@
   --color-surface-400: var(--zinc-400);
 }
 
-
-
 /* =========================================
    MANUAL DARK MODE
 ========================================= */
-html.dark, .dark {
+html.dark,
+.dark {
   color-scheme: dark;
 
   --color-background: var(--zinc-950);
@@ -105,11 +104,12 @@ html.dark, .dark {
 
   --color-destructive: oklch(0.4 0.2 29);
 
-  --color-border: var(--zinc-800);
-  --color-input: var(--zinc-800);
+  --color-border: var(--zinc-700);
+  --color-input: var(--zinc-700); /* Match border color for consistency */
   --color-ring: var(--primary-400);
-  
+
   --color-control-checked: var(--brand-secondary-orange);
+  --color-control-default: var(--zinc-700);
 
   --color-tooltip-bg: var(--zinc-800);
   --color-tooltip-text: var(--zinc-50);
@@ -145,6 +145,7 @@ html.dark, .dark {
   --color-input: var(--color-input);
   --color-ring: var(--color-ring);
   --color-control-checked: var(--color-control-checked);
+  --color-control-default: var(--color-control-default);
   --color-tooltip-bg: var(--color-tooltip-bg);
   --color-tooltip-text: var(--color-tooltip-text);
   --color-surface-50: var(--color-surface-50);

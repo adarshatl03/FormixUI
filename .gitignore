@@ -24,4 +24,4 @@ dist-lib
 *.njsproj
 *.sln
 *.sw?
-.agent
+# .agent
