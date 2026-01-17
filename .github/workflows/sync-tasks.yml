@@ -22,7 +22,7 @@ jobs:
     # CONFIGURATION
     # ---------------------------------------------------------
     env:
-      PROJECT_NUMBER: 2 # <--- UI Project Board
+      PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
 
     steps:
       - name: Checkout code
