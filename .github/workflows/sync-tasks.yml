@@ -22,7 +22,7 @@ jobs:
     # CONFIGURATION
     # ---------------------------------------------------------
     env:
-      PROJECT_NUMBER: 1 # <--- UPDATE THIS TO YOUR PROJECT NUMBER
+      PROJECT_NUMBER: 2 # <--- UI Project Board
 
     steps:
       - name: Checkout code
