@@ -1,48 +1,45 @@
 # 🚀 FormixUI
 
-<!-- PROJECT_STATUS_START -->
-<div align="center">
-
-  <h3>🚀 Project Status: 27% Complete</h3>
-
-  <img src="https://progress-bar.dev/27/?scale=100&title=progress&width=600&color=00ff00&suffix=%25" alt="Progress Bar">
-
-  <br/>
-
-| 📦 Version | ✅ Completed | 🚧 In Progress | 🔄 Recurring | 📅 Upcoming |
-| :--------: | :----------: | :------------: | :----------: | :---------: |
-| **v0.0.6** |    **27**    |     **9**      |    **3**     |   **63**    |
-
-</div>
-
-<details open>
-<summary><h3>📅 Recent Activity & Roadmap</h3></summary>
-
-| **✨ Recently Completed** | **🚧 In Progress / Planned** |
-| :------------------------ | :--------------------------- |
-
-| <ul><li>✅ **Button**: Standard interactive button.</li>
-
-<li>✅ **Checkbox**: Binary selection control.</li>
-<li>✅ **Combobox (Autocomplete)**: Input with filtered suggestions.</li>
-<li>✅ **Date Picker**: Date selection interactive calendar.</li>
-<li>✅ **Date Range Picker**: Date range selection.</li></ul> | <ul><li>🚧 Locale switcher UI</li>
-<li>🚧 Week start UI</li>
-<li>🚧 Week number toggle UI</li>
-<li>🚧 Time step UI</li>
-<li>🚧 Focus trapping (modals)</li></ul> |
-
-</details>
-
-<br/>
-<!-- PROJECT_STATUS_END -->
-
 [![npm version](https://img.shields.io/npm/v/formix-ui.svg)](https://www.npmjs.com/package/formix-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://reactjs.org/)
 
 **A powerful, schema-driven form engine for React with a visual builder, comprehensive validation, and enterprise-grade features.**
+
+<!-- PROJECT_STATUS_START -->
+
+### 🚀 Status
+
+| 📦 **Version** | ✅ **Completed** | 🚧 **In Progress** | 🔄 **Recurring** | 📅 **Upcoming** |
+| :------------: | :--------------: | :----------------: | :--------------: | :-------------: |
+|   **v0.0.6**   |        27        |         9          |        3         |       63        |
+
+<sub>Last updated: Sat, 17 Jan 2026 22:17:54 GMT</sub>
+
+<details>
+<summary><h3>📅 Recent Activity & Roadmap</h3></summary>
+
+#### ✨ Recently Completed
+
+- ✅ **Button**: Standard interactive button.
+- ✅ **Checkbox**: Binary selection control.
+- ✅ **Combobox (Autocomplete)**: Input with filtered suggestions.
+- ✅ **Date Picker**: Date selection interactive calendar.
+- ✅ **Date Range Picker**: Date range selection.
+
+#### 🚧 In Progress / Planned
+
+- 🚧 Locale switcher UI
+- 🚧 Week start UI
+- 🚧 Week number toggle UI
+- 🚧 Time step UI
+- 🚧 Focus trapping (modals)
+
+</details>
+
+<br/>
+<!-- PROJECT_STATUS_END -->
 
 ## ✨ Features
 
@@ -72,7 +69,7 @@
 - Zod integration
 - Custom validation functions
 
-## ✨ Features (v3.2.0)
+## 🌟 Highlights
 
 - **Framework Agnostic State**: Choose between Native `useForm`, **Formik**, or **React Hook Form**.
 - **Multi-Validation Support**: First-class support for **Zod** and **Yup**.

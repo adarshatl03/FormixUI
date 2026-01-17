@@ -122,26 +122,29 @@ async function generateStatus() {
 
   const statusMarkdown = `
 ${startMarker}
-<div align="center">
 
-  <h3>🚀 Project Status: ${percent}% Complete</h3>
+### 🚀 Status
 
-  <img src="https://progress-bar.dev/${percent}/?scale=100&title=progress&width=600&color=00ff00&suffix=%25" alt="Progress Bar">
+| 📦 **Version** | ✅ **Completed** | 🚧 **In Progress** | 🔄 **Recurring** | 📅 **Upcoming** |
+| :---: | :---: | :---: | :---: | :---: |
+| **v${version}** | ${completedCount} | ${inProgressCount} | ${recurringCount} | ${upcomingCount} |
 
-  <br/>
+<sub>Last updated: ${new Date().toUTCString()}</sub>
 
-  | 📦 Version | ✅ Completed | 🚧 In Progress | 🔄 Recurring | 📅 Upcoming |
-  | :---: | :---: | :---: | :---: | :---: |
-  | **v${version}** | **${completedCount}** | **${inProgressCount}** | **${recurringCount}** | **${upcomingCount}** |
-
-</div>
-
-<details open>
+<details>
 <summary><h3>📅 Recent Activity & Roadmap</h3></summary>
 
-| **✨ Recently Completed** | **🚧 In Progress / Planned** |
-| :--- | :--- |
-| <ul>${recentFeaturesMd}</ul> | <ul>${inProgressMd}</ul> |
+#### ✨ Recently Completed
+${completedFeatures
+  .slice(0, 5)
+  .map((f) => `- ✅ ${f}`)
+  .join("\n")}
+
+#### 🚧 In Progress / Planned
+${inProgressFeatures
+  .slice(0, 5)
+  .map((f) => `- 🚧 ${f}`)
+  .join("\n")}
 
 </details>
 
@@ -149,18 +152,42 @@ ${startMarker}
 ${endMarker}
 `;
 
-  let newReadme = readmeContent;
-  if (readmeContent.includes(startMarker) && readmeContent.includes(endMarker)) {
-    const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`);
-    newReadme = readmeContent.replace(regex, statusMarkdown.trim());
+  // Remove existing status block if present to re-position it
+  const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`, "g");
+  let newReadme = readmeContent.replace(regex, "").trim();
+
+  // Find target section to insert before
+  // We want to insert before the FIRST features section found
+  const featuresIndex = newReadme.indexOf("## ✨ Features");
+  const highlightsIndex = newReadme.indexOf("## 🌟 Highlights");
+
+  // Find the earliest valid index
+  let targetIndex = -1;
+  if (featuresIndex !== -1 && highlightsIndex !== -1) {
+    targetIndex = Math.min(featuresIndex, highlightsIndex);
+  } else if (featuresIndex !== -1) {
+    targetIndex = featuresIndex;
+  } else if (highlightsIndex !== -1) {
+    targetIndex = highlightsIndex;
+  }
+
+  if (targetIndex !== -1) {
+    // Insert before the identified section section
+    newReadme =
+      newReadme.slice(0, targetIndex) +
+      "\n\n" +
+      statusMarkdown.trim() +
+      "\n\n" +
+      newReadme.slice(targetIndex);
   } else {
-    const lines = readmeContent.split("\n");
+    // Fallback: Insert after Title
+    const lines = newReadme.split("\n");
     const titleIndex = lines.findIndex((l) => l.startsWith("# "));
     if (titleIndex !== -1) {
       lines.splice(titleIndex + 1, 0, "\n" + statusMarkdown.trim() + "\n");
       newReadme = lines.join("\n");
     } else {
-      newReadme = statusMarkdown + "\n" + readmeContent;
+      newReadme = statusMarkdown + "\n" + newReadme;
     }
   }
 
